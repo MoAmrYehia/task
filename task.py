@@ -1,18 +1,28 @@
+"""
+Created on Fri Feb 19 09:26:28 2021
+
+@author: mohamed
+
+"""
+
 # Libraries
 import pandas as pd
 import os
 import numpy as np
+from scipy.io.wavfile import read
+from scipy.signal import find_peaks
+
 # from datetime import datetime, timedelta
 import datetime as dt
-import random
+
 # Read in relevant data files
 samples_df = pd.read_csv('samples_short.csv')
 ground_truth = pd.read_csv('ground_truth_short.csv')
 perfect = pd.read_csv('perfect.csv')
 
-directory_of_sounds = 'sounds/samples/'
+directory_of_sounds = 'sounds/wav_samples/'
 os.path.isdir(directory_of_sounds)
-len(os.listdir(directory_of_sounds + '/vi95kMQ65UeU7K1wae12D1GUeXd2')) # should be 22
+len(os.listdir(directory_of_sounds)) # should be 22
 
 #########################
 # TASK DESCRIPTION
@@ -35,16 +45,18 @@ len(os.listdir(directory_of_sounds + '/vi95kMQ65UeU7K1wae12D1GUeXd2')) # should 
 # The simpler, the better. No need to use Tensorflow, pre-trained models, or anything like that.
 # Feel free to use libraries, but know that this is not a test of your modeling skills.
 
-def detect_coughs(file = 'sounds/samples/vi95kMQ65UeU7K1wae12D1GUeXd2/sample-1613658921823.m4a'):
+def detect_coughs(file = 'sounds/wav_samples/sample-1613658921823.wav'):
     # Replace the below random code with something meaningful which
     # generates a one-column dataframe with a column named "peak_start"
-    peaks = np.random.sample(5) * 30
+    audio = read(file)
+    audio_to_np = np.array(audio[1],dtype=float)
+    peaks, _  = find_peaks(audio_to_np, height= 20000, prominence=1, width= 3)
     peaks.sort()
     out = pd.DataFrame({'peak_start': peaks})
     return(out)
 
 # Run function on all sounds
-sounds_dir = directory_of_sounds + 'vi95kMQ65UeU7K1wae12D1GUeXd2/'
+sounds_dir = directory_of_sounds
 all_sounds = os.listdir(sounds_dir)
 out_list = []
 for i in range(len(all_sounds)):
