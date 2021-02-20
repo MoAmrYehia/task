@@ -1,7 +1,5 @@
 import os
 from task import detect_coughs
-import pandas as pd 
-from IPython.display import HTML 
 from flask import Flask, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
@@ -44,12 +42,6 @@ def upload_file():
     </form>
     '''
 
-def detection():
-    file_name = upload_file()
-    peak_result = detect_coughs(file_name)
-    peak_result = peak_result.to_html() 
-
-    return peak_result
 
 if __name__ == '__main__':
     app.run(port=5000,debug=True)
